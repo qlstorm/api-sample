@@ -12,30 +12,28 @@ $controller = 'Requests';
 
 $action = 'index';
 
-$param = 0;
+$params = [];
 
 if (isset($_SERVER['PATH_INFO'])) {
-    $url = explode('/', $_SERVER['PATH_INFO']);
+    $params = explode('/', $_SERVER['PATH_INFO']);
 
-    $param = $url[1];
+    array_shift($params);
 
-    if (!is_numeric($url[1])) {
-        $controller = $url[1];
-    }
-    
-    if (isset($url[2])) {
-        $param = $url[2];
+    if (isset($params[0]) && $params[0] && !is_numeric($params[0])) {
+        $controller = $params[0];
+
+        unset($params[0]);
     }
 
-    if (isset($url[2]) && !is_numeric($url[2]) && $url[2]) {
-        $action = $url[2];
+    if (isset($params[1]) && $params[1] && !is_numeric($params[1])) {
+        $action = $params[1];
+
+        unset($params[1]);
     }
 
-    if (isset($url[3]) && $url[3]) {
-        $param = $url[3];
-    }
+    array_values($params);
 }
 
 Init::init();
 
-call_user_func("controllers\\$controller::$action", (int)$param);
+call_user_func_array("controllers\\$controller::$action", $params);
