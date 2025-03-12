@@ -52,7 +52,7 @@ class Requests {
             $updateRow = [
                 'id' => (int)$param,
                 'status' => 'Resolved',
-                'comment' => Connection::escape($putdata)
+                'comment' => $putdata
             ];
 
             $res = Connection::insert('requests', $updateRow);
